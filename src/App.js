@@ -3,6 +3,7 @@ import React from 'react';
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import AboutUs from './components/AboutUs';
+import Footer from './components/Footer';
 
 const App = () => {
  return(
@@ -19,7 +20,7 @@ const App = () => {
       </div>
       
     </main>
-    
+    <Footer />
   </div>
  );
   
