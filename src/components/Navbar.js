@@ -24,7 +24,7 @@ const Navbar = () => {
                         <Link className="link" to="blog" spy={true} smooth={true} duration={500}>
                             Blog
                         </Link>
-                        <Link className="link" to="contact" spy={true} smooth={true} duration={500}>
+                        <Link className="link" to="footer" spy={true} smooth={true} duration={500}>
                             Contact Us
                         </Link>
                     </nav>

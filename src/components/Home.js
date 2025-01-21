@@ -6,6 +6,7 @@ const Home = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [predictionResult, setPredictionResult] = useState(null); 
 
   // Handle file selection
   const handleFileChange = (event) => {
@@ -39,7 +40,7 @@ const Home = () => {
     try {
       const xhr = new XMLHttpRequest();
 
-      xhr.open("POST", "https://your-backend-url.com/upload", true);
+      xhr.open("POST", "http://127.0.0.1:5000/predict", true);  // Ensure the Flask backend URL is correct
 
       // Track progress
       xhr.upload.onprogress = (event) => {
@@ -52,10 +53,12 @@ const Home = () => {
       xhr.onload = () => {
         if (xhr.status === 200) {
           setIsUploading(false);
-          alert("File uploaded successfully!");
+
+          const response = JSON.parse(xhr.responseText);  // Get the response from backend
+          setPredictionResult(response);  // Log the prediction details or success message in the console
         } else {
-          setIsUploading(false);
-          alert("Error uploading file. Please try again.");
+          const errorResponse = JSON.parse(xhr.responseText);
+          setErrorMessage(errorResponse.message || "Error uploading file. Please try again.");
         }
       };
 
@@ -90,14 +93,28 @@ const Home = () => {
         {/* Progress Bar */}
         {isUploading && (
           <div className="progress-container">
-            <div className="progress-bar" style={{ width: `${progress}%` }}>
-              {progress}%
-            </div>
+            
+            {progress < 100 && (
+              <div className="spinner"></div> // Display spinner until upload is complete
+            )}
           </div>
         )}
 
         {/* Upload Button */}
-        <Button title="Upload File" onClick={handleUpload} />
+        
+        <button onClick={handleUpload} className="button">Upload File</button>
+
+        {predictionResult && (
+          <div className="prediction-result">
+            <h3>Prediction Result</h3>
+            <p>
+              <strong>Class:</strong> {predictionResult.predicted_class}
+            </p>
+            <p>
+              <strong>Probability:</strong> {predictionResult.probability.toFixed(2)}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

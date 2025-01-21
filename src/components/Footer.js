@@ -37,7 +37,7 @@ const Footer = () => {
       </div>
       <div className="flat-footer-bottom">
         <p>
-          &copy; 2025 WellnessVista | Developed by <span className="text-hoverColor">Envictus Solutions</span>. All rights reserved.
+          &copy; 2025 MedRead | Developed by <span className="text-hoverColor">Envictus Solutions</span>. All rights reserved.
         </p>
       </div>
     </div>
