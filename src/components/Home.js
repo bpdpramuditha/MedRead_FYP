@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import Button from "../layouts/Button";
+import { useNavigate } from "react-router-dom";
+import AboutUs from "./AboutUs";
 
 const Home = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [predictionResult, setPredictionResult] = useState(null); 
+  const navigate = useNavigate(); // For navigation
 
   // Handle file selection
   const handleFileChange = (event) => {
@@ -40,9 +41,8 @@ const Home = () => {
     try {
       const xhr = new XMLHttpRequest();
 
-      xhr.open("POST", "http://127.0.0.1:5000/predict", true);  // Ensure the Flask backend URL is correct
+      xhr.open("POST", "http://127.0.0.1:5000/predict", true);
 
-      // Track progress
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
           const percentCompleted = Math.round((event.loaded / event.total) * 100);
@@ -54,8 +54,13 @@ const Home = () => {
         if (xhr.status === 200) {
           setIsUploading(false);
 
-          const response = JSON.parse(xhr.responseText);  // Get the response from backend
-          setPredictionResult(response);  // Log the prediction details or success message in the console
+          const response = JSON.parse(xhr.responseText);
+
+          // Convert selected file to a previewable URL
+          const uploadedImageURL = URL.createObjectURL(selectedFile);
+
+          // Navigate to the result page
+          navigate("/result", { state: { uploadedImage: uploadedImageURL, predictionResult: response } });
         } else {
           const errorResponse = JSON.parse(xhr.responseText);
           setErrorMessage(errorResponse.message || "Error uploading file. Please try again.");
@@ -76,45 +81,34 @@ const Home = () => {
   };
 
   return (
-    <div className="hero-section">
-      <div className="content-container space-y-5">
-        <h1 className="heading">Revolutionizing Medical Report Analysis</h1>
-        <p>Experience the seamless reading of your medical reports with MedRead</p>
+    <div id="home">
+      <div className="hero-section">
+        <div className="content-container space-y-5">
+          <h1 className="heading">Revolutionizing Medical Report Analysis</h1>
+          <p>Experience the seamless reading of your medical reports with MedRead</p>
 
-        {/* File Upload Input */}
-        <input
-          type="file"
-          accept=".png, .jpg, .jpeg, .dcm"
-          onChange={handleFileChange}
-          className="file-input"
-        />
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+          <input
+            type="file"
+            accept=".png, .jpg, .jpeg, .dcm"
+            onChange={handleFileChange}
+            className="file-input"
+          />
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        {/* Progress Bar */}
-        {isUploading && (
-          <div className="progress-container">
-            
-            {progress < 100 && (
-              <div className="spinner"></div> // Display spinner until upload is complete
-            )}
-          </div>
-        )}
+          <button onClick={handleUpload} className="button">Upload File</button>
 
-        {/* Upload Button */}
-        
-        <button onClick={handleUpload} className="button">Upload File</button>
+          {/* Progress Bar / Spinner */}
+          {isUploading && (
+            <div className="progress-container">
+              <div className="spinner"></div>
+            </div>
+          )}
+        </div>
+      </div>
 
-        {predictionResult && (
-          <div className="prediction-result">
-            <h3>Prediction Result</h3>
-            <p>
-              <strong>Class:</strong> {predictionResult.predicted_class}
-            </p>
-            <p>
-              <strong>Probability:</strong> {predictionResult.probability.toFixed(2)}
-            </p>
-          </div>
-        )}
+      {/* About Us Section */}
+      <div id="aboutus">
+        <AboutUs />
       </div>
     </div>
   );
