@@ -356,3 +356,94 @@ button:hover {
 }
 
 
+.result-page {
+  font-family: 'Arial', sans-serif;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.result-page h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.result-page h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.uploaded-image,
+.prediction-details {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.image-preview {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.result-page p {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+.result-page button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.result-page button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.result-page button:active {
+  background-color: #004085;
+  transform: scale(1);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .result-page {
+    padding: 15px;
+  }
+
+  .uploaded-image,
+  .prediction-details {
+    padding: 15px;
+  }
+
+  .result-page h1 {
+    font-size: 1.8rem;
+  }
+
+  .result-page button {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+

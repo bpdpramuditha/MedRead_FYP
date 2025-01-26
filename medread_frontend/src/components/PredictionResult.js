@@ -21,13 +21,12 @@ const PredictionResult = () => {
     <div className="result-page">
       <h1>Prediction Results</h1>
 
-      {/* Display uploaded image */}
       <div className="uploaded-image">
         <h3>Uploaded Image</h3>
         <img src={uploadedImage} alt="Uploaded File" className="image-preview" />
       </div>
 
-      {/* Conditional rendering based on the type of prediction */}
+    
       <div className="prediction-details">
         <h3>Prediction Details</h3>
         {predictionResult.type === "CT scan" ? (

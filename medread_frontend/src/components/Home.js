@@ -5,7 +5,6 @@ import AboutUs from "./AboutUs";
 const Home = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate(); // For navigation
 
@@ -32,7 +31,6 @@ const Home = () => {
     }
 
     setErrorMessage("");
-    setProgress(0);
     setIsUploading(true);
 
     const formData = new FormData();
@@ -43,12 +41,6 @@ const Home = () => {
 
       xhr.open("POST", "http://127.0.0.1:5000/predict", true);
 
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const percentCompleted = Math.round((event.loaded / event.total) * 100);
-          setProgress(percentCompleted);
-        }
-      };
 
       xhr.onload = () => {
         if (xhr.status === 200) {
