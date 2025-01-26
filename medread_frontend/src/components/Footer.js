@@ -30,14 +30,14 @@ const Footer = () => {
           <h1 className="font-medium text-md">Contact Us</h1>
           <nav className="flat-nav">
             <a href="/">106/3, Kapuhempala, Akmmemna, Galle</a>
-            <a href="mailto:support@care.com">support@care.com</a>
-            <a href="tel:+1234567890">+123-456-7890</a>
+            <a href="mailto:denith.20210845@iit.ac.lk">support@care.com</a>
+            <a href="tel:+94 702618507">+94702618507</a>
           </nav>
         </div>
       </div>
       <div className="flat-footer-bottom">
         <p>
-          &copy; 2025 MedRead | Developed by <span className="text-hoverColor">Envictus Solutions</span>. All rights reserved.
+          &copy; 2025 MedRead | Developed by <span className="text-hoverColor">My Solutions</span>. All rights reserved.
         </p>
       </div>
     </div>

@@ -88,11 +88,17 @@ const Home = () => {
           <p>Experience the seamless reading of your medical reports with MedRead</p>
 
           <input
-            type="file"
-            accept=".png, .jpg, .jpeg, .dcm"
-            onChange={handleFileChange}
-            className="file-input"
+          type="file"
+          accept=".png, .jpg, .jpeg, .dcm"
+          className="file-input"
+          id="file-upload"
+          onChange={handleFileChange}
           />
+          <label htmlFor="file-upload" className="custom-file-button">
+            Choose Image
+          </label>
+          
+          {selectedFile && <p className="file-name">Selected File: {selectedFile.name}</p>}
           {errorMessage && <p className="error-message">{errorMessage}</p>}
 
           <button onClick={handleUpload} className="button">Upload File</button>
