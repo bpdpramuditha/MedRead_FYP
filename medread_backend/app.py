@@ -2,14 +2,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-import cv2  # For image processing
-import pytesseract  # For OCR
-import joblib  # For loading text models
+import cv2
+import pytesseract
+import joblib
 import numpy as np
 import tempfile
 import os
 import logging
-import time
+import traceback
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -20,32 +20,35 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Load the CT scan model
-ct_scan_model_path = r"E:\medread-fyp\medread_backend\lung_cancer_detection_model.h5"  # Update with your model path
+ct_scan_model_path = r"E:\medread-fyp\medread_backend\lung_cancer_detection_model.h5"
 ct_scan_model = load_model(ct_scan_model_path)
 
 # Load the text models
 text_classifier_path = r"E:\medread-fyp\medread_backend\lung_cancer_classifier.pkl"
 tfidf_vectorizer_path = r"E:\medread-fyp\medread_backend\tfidf_vectorizer.pkl"
 
-text_classifier = joblib.load(text_classifier_path)  # Load the classifier
-tfidf_vectorizer = joblib.load(tfidf_vectorizer_path)  # Load the TF-IDF vectorizer
+text_classifier = joblib.load(text_classifier_path)
+tfidf_vectorizer = joblib.load(tfidf_vectorizer_path)
 
 logger.info("All models loaded successfully.")
 
 # Preprocess the CT scan image before prediction
 def preprocess_ct_scan(img_path):
-    target_size = (256, 256)  # Update based on your model's input shape
-    img = image.load_img(img_path, target_size=target_size)
-    img = image.img_to_array(img)
-    img = np.expand_dims(img, axis=0)  # Add batch dimension
-    img = img / 255.0  # Normalize pixel values
-    return img
+    try:
+        target_size = (256, 256)
+        img = image.load_img(img_path, target_size=target_size)
+        img = image.img_to_array(img)
+        img = np.expand_dims(img, axis=0)
+        img = img / 255.0
+        return img
+    except Exception as e:
+        logger.error(f"Error preprocessing CT scan: {e}")
+        raise ValueError("Invalid or corrupted image file.")
 
 # Detect if the image is a CT scan or a text-based report
 def detect_ct_or_text(img_path):
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     text_detected = pytesseract.image_to_string(img).strip()
-    # If Tesseract finds meaningful text, classify as text image
     return "text" if text_detected else "ct"
 
 # Extract text from a radiology text report image
@@ -56,7 +59,7 @@ def extract_text(img_path):
 
 # Preprocess text using the TF-IDF vectorizer
 def preprocess_text(text):
-    return tfidf_vectorizer.transform([text])  # Transform text to vectorized form
+    return tfidf_vectorizer.transform([text])
 
 # Define a route for prediction
 @app.route('/predict', methods=['POST'])
@@ -67,6 +70,14 @@ def predict():
     file = request.files['file']
     if file.filename == '':
         return jsonify({"status": "error", "message": "No selected file"}), 400
+
+    # Validate file size (10MB limit)
+    max_file_size = 10 * 1024 * 1024
+    file.seek(0, os.SEEK_END)
+    file_size = file.tell()
+    file.seek(0)
+    if file_size > max_file_size:
+        return jsonify({"status": "error", "message": "File size exceeds 10MB limit"}), 400
 
     try:
         # Temporarily save the uploaded image
@@ -79,11 +90,10 @@ def predict():
 
         if image_type == "ct":
             logger.info("CT scan detected.")
-            # Preprocess the CT scan and make predictions
             img = preprocess_ct_scan(img_path)
             prediction = ct_scan_model.predict(img)
             predicted_class = np.argmax(prediction, axis=1)[0]
-            class_labels = ['Benign cases', 'Malignant cases', 'Normal cases']  
+            class_labels = ['Benign cases', 'Malignant cases', 'Normal cases']
 
             logger.info(f"CT scan prediction: {class_labels[predicted_class]}, Probability: {np.max(prediction)}")
 
@@ -95,15 +105,9 @@ def predict():
             }), 200
         else:
             logger.info("Text report detected.")
-            # Extract text from the radiology report image
             extracted_text = extract_text(img_path)
-
-            # Preprocess the extracted text
             processed_text = preprocess_text(extracted_text)
-
             text_prediction = text_classifier.predict(processed_text)
-
-            # Access the first prediction directly (it's already a string like 'Normal')
             text_predicted_class = text_prediction[0]
 
             logger.info(f"Text prediction: {text_predicted_class}")
@@ -112,12 +116,12 @@ def predict():
                 "status": "success",
                 "type": "Text report",
                 "extracted_text": extracted_text,
-                "predicted_class": text_predicted_class  
+                "predicted_class": text_predicted_class
             }), 200
-
 
     except Exception as e:
         logger.error(f"Error during prediction: {e}")
+        logger.error(traceback.format_exc())
         return jsonify({"status": "error", "message": str(e)}), 500
 
     finally:
