@@ -6,19 +6,24 @@ const Home = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();
 
   // Handle file selection
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const validFormats = ["image/png", "image/jpeg", "image/jpg", "application/dicom"];
-      if (validFormats.includes(file.type)) {
-        setSelectedFile(file);
-        setErrorMessage("");
-      } else {
+      const maxFileSize = 10 * 1024 * 1024; // 10MB
+
+      if (!validFormats.includes(file.type)) {
         setErrorMessage("Invalid file type. Please upload a CT image in PNG, JPEG, JPG, or DICOM format.");
         setSelectedFile(null);
+      } else if (file.size > maxFileSize) {
+        setErrorMessage("File size exceeds 10MB limit.");
+        setSelectedFile(null);
+      } else {
+        setSelectedFile(file);
+        setErrorMessage("");
       }
     }
   };
@@ -38,20 +43,14 @@ const Home = () => {
 
     try {
       const xhr = new XMLHttpRequest();
-
       xhr.open("POST", "http://127.0.0.1:5000/predict", true);
 
-
       xhr.onload = () => {
+        setIsUploading(false);
+
         if (xhr.status === 200) {
-          setIsUploading(false);
-
           const response = JSON.parse(xhr.responseText);
-
-          // Convert selected file to a previewable URL
           const uploadedImageURL = URL.createObjectURL(selectedFile);
-
-          // Navigate to the result page
           navigate("/result", { state: { uploadedImage: uploadedImageURL, predictionResult: response } });
         } else {
           const errorResponse = JSON.parse(xhr.responseText);
@@ -61,14 +60,14 @@ const Home = () => {
 
       xhr.onerror = () => {
         setIsUploading(false);
-        alert("An error occurred while uploading the file.");
+        setErrorMessage("An error occurred during the upload. Please check your internet connection and try again.");
       };
 
       xhr.send(formData);
     } catch (error) {
       console.error("Upload Error:", error);
       setIsUploading(false);
-      alert("An error occurred during the upload.");
+      setErrorMessage("An error occurred during the upload. Please try again.");
     }
   };
 
@@ -80,20 +79,22 @@ const Home = () => {
           <p>Experience the seamless reading of your medical reports with MedRead</p>
 
           <input
-          type="file"
-          accept=".png, .jpg, .jpeg, .dcm"
-          className="file-input"
-          id="file-upload"
-          onChange={handleFileChange}
+            type="file"
+            accept=".png, .jpg, .jpeg, .dcm"
+            className="file-input"
+            id="file-upload"
+            onChange={handleFileChange}
           />
           <label htmlFor="file-upload" className="custom-file-button">
             Choose Image
           </label>
-          
+
           {selectedFile && <p className="file-name">Selected File: {selectedFile.name}</p>}
           {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-          <button onClick={handleUpload} className="button">Upload File</button>
+          <button onClick={handleUpload} className="button" disabled={isUploading}>
+            {isUploading ? "Uploading..." : "Upload File"}
+          </button>
 
           {/* Progress Bar / Spinner */}
           {isUploading && (

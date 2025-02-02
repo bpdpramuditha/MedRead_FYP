@@ -26,7 +26,6 @@ const PredictionResult = () => {
         <img src={uploadedImage} alt="Uploaded File" className="image-preview" />
       </div>
 
-    
       <div className="prediction-details">
         <h3>Prediction Details</h3>
         {predictionResult.type === "CT scan" ? (
