@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AboutUs from "./AboutUs";
+import BlogPage from "./BlogPage";
 
 const Home = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -108,6 +109,10 @@ const Home = () => {
       {/* About Us Section */}
       <div id="aboutus">
         <AboutUs />
+      </div>
+
+      <div id="blog">
+        <BlogPage />
       </div>
     </div>
   );
