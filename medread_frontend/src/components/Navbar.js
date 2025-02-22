@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-scroll";
+import ContactUsPopup from "./ContactUsPopup"; // Import the popup component
 
 const Navbar = () => {
-    return(
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    return (
         <div className="navigation-bar-container">
             <div>
                 <div className="container">
@@ -24,12 +27,16 @@ const Navbar = () => {
                         <Link className="link" to="blog" spy={true} smooth={true} duration={500}>
                             Blog
                         </Link>
-                        <Link className="link" to="footer" spy={true} smooth={true} duration={500}>
+                        <Link className="link" to="footer" spy={true} smooth={true} duration={500} onClick={() => setIsPopupOpen(true)}>
                             Contact Us
                         </Link>
+    
                     </nav>
                 </div>
             </div>
+
+            {/* Contact Us Popup Component */}
+            <ContactUsPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
         </div>
     );
 };
