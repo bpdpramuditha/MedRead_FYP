@@ -55,7 +55,34 @@ const PredictionResult = () => {
         )}
       </div>
 
-      <button onClick={() => navigate("/")}>Upload Another File</button>
+      <div className="button-container">
+        <button className="upload-button" onClick={() => navigate("/")}>Upload Another File</button>
+
+        <button
+          className="download-button"
+          onClick={() => {
+            if (predictionResult.type === "CT scan") {
+              const queryParams = new URLSearchParams({
+                uploaded_image: uploadedImage,
+                type: predictionResult.type,
+                predicted_class: predictionResult.predicted_class,
+                probability: predictionResult.probability,
+              }).toString();
+              window.open(`http://localhost:5000/download_report?${queryParams}`, "_blank");
+            } else {
+              const queryParams = new URLSearchParams({
+                type: predictionResult.type,
+                predicted_class: predictionResult.predicted_class,
+                extracted_text: predictionResult.extracted_text,
+              }).toString();
+
+              window.open(`http://localhost:5000/download_report?${queryParams}`, "_blank");
+            }
+          }}
+        >
+          Download Report
+        </button>
+      </div>
     </div>
   );
 };
