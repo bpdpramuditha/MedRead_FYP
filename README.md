@@ -48,7 +48,7 @@ Existing AI solutions lack:
 
 ---
 
-## 🏗 System Architecture
+## System Architecture
 
 ```
 FYP-main/
@@ -101,11 +101,22 @@ cd FYP-main
 
 ### 2️⃣ Backend Setup
 
-```bash
-cd backend
-npm install
-npm start
-```
+Setting Up the Virtual Environment
+1️⃣ Create the virtual environment
+python -m venv venv
+2️⃣ Activate the virtual environment
+
+Windows
+
+venv\Scripts\activate
+
+macOS / Linux
+
+source venv/bin/activate
+3️⃣ Install dependencies
+pip install -r requirements.txt
+4️⃣ Deactivate (when finished)
+deactivate
 
 ### 3️⃣ ML Environment
 
