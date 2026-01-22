@@ -167,6 +167,42 @@ venv/
 __pycache__/
 *.pyc
 ```
+## Model Download and Setup
+
+Due to GitHub file size limitations, the trained deep learning model is **not included in this repository**.
+
+### Download the Model
+
+* **Download from:**
+ https://drive.google.com/drive/folders/1knDnYbPJbqAOQ-u7alaB_Idj0j_TSo9l?usp=drive_link
+
+### Local Placement
+
+After downloading, place the model file in the following directory:
+
+```
+medread_backend/
+```
+
+### Expected Filename
+
+```
+lung_cancer_detection_model.h5
+```
+
+### Notes
+
+* Ensure the filename matches exactly, as the backend loads the model using this path.
+* The model file is excluded from version control and listed in `.gitignore`.
+* This approach keeps the repository lightweight while ensuring reproducibility.
+
+---
+
+**Example (Python model loading):**
+
+```python
+model = load_model("medread_backend/lung_cancer_detection_model.h5")
+```
 
 ---
 
