@@ -98,7 +98,7 @@ FYP-main/
 
 ## Installation & Setup
 
-### 1️⃣ Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/FYP-main.git
@@ -111,13 +111,13 @@ cd FYP-main
 
 This project uses a **Python virtual environment (`venv`)** to manage dependencies and ensure reproducibility.
 
-### 2️⃣ Create the Virtual Environment
+### 2. Create the Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-### 3️⃣ Activate the Virtual Environment
+### 3. Activate the Virtual Environment
 
 **Windows**
 
@@ -131,13 +131,13 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### 4️⃣ Install Dependencies
+### 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5️⃣ Deactivate the Environment
+### 5. Deactivate the Environment
 
 ```bash
 deactivate
@@ -151,6 +151,21 @@ deactivate
 cd frontend
 npm install
 npm start
+```
+
+---
+
+## .gitignore Configuration
+
+Ensure the following entries are included in your `.gitignore` file:
+
+```gitignore
+# Python virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
 ```
 
 ---
@@ -192,3 +207,4 @@ The system integrates XAI techniques to:
 Final Year Undergraduate – Software Engineering
 Focus Areas: AI in Healthcare, NLP, Deep Learning, Explainable AI
 
+---
