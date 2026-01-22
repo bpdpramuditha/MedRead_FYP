@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AboutUs from "./AboutUs";
+//import Service from "./ServicePage";
 import BlogPage from "./BlogPage";
 
 const Home = () => {
@@ -106,10 +107,14 @@ const Home = () => {
         </div>
       </div>
 
-      {/* About Us Section */}
+      {/* <div id="Services">
+        <Service />
+      </div> */}
+      
       <div id="aboutus">
         <AboutUs />
       </div>
+
 
       <div id="blog">
         <BlogPage />
